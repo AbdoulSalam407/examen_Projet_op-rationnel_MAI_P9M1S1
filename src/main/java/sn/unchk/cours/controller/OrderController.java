@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/orders")
+@RequestMapping("/api/v1/orders")
 @RequiredArgsConstructor
 public class OrderController {
 
@@ -32,24 +32,12 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<Order> create(@Valid @RequestBody CreateOrderDTO request) {
-        Order order = new Order();
-        order.setOrderDate(request.orderDate() != null ? request.orderDate() : java.time.LocalDateTime.now());
-        order.setTotalAmount(request.totalAmount());
-        order.setQuantity(request.quantity());
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.save(order));
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.create(request));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Order> update(@PathVariable Long id, @Valid @RequestBody CreateOrderDTO request) {
-        try {
-            Order order = new Order();
-            order.setOrderDate(request.orderDate() != null ? request.orderDate() : java.time.LocalDateTime.now());
-            order.setTotalAmount(request.totalAmount());
-            order.setQuantity(request.quantity());
-            return ResponseEntity.ok(orderService.update(id, order));
-        } catch (RuntimeException exception) {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(orderService.update(id, request));
     }
 
     @DeleteMapping("/{id}")
